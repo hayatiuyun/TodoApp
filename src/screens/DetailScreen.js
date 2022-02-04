@@ -1,14 +1,24 @@
 /* eslint-disable prettier/prettier */
 import React, {useState, useContext} from 'react';
-import {TouchableOpacity, View, Text, StyleSheet, Alert} from 'react-native';
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  KeyboardAvoidingView,
+  TextInput,
+} from 'react-native';
 import {Context} from '../context/taskContext';
 
 const DetailScreen = ({route, navigation}) => {
   // const {toggleCompletedTask, tasksFilter} = useTask();
-  const {state, toggleCompletedTask, deleteTask} = useContext(Context);
+  const {state, toggleCompletedTask, deleteTask, editTask} =
+    useContext(Context);
   const {item} =
     route.params; /* get params of route. params is passed from previous screen */
   const [taskDetail, setTaskDetail] = useState(item);
+  const [titleTask, setTitleTask] = useState(item.task);
 
   const completedTask = () => {
     const updateTaskDetail = {
@@ -18,6 +28,20 @@ const DetailScreen = ({route, navigation}) => {
     toggleCompletedTask(updateTaskDetail, () =>
       setTaskDetail(updateTaskDetail),
     );
+  };
+
+  const onChangeTitleTask = text => {
+    setTitleTask(text);
+    // setTaskDetail({task: text, ...taskDetail});
+  };
+
+  const editTitleTask = () => {
+    const data = {
+      ...taskDetail,
+      task: titleTask,
+    };
+    console.log('call context editTask', data, titleTask);
+    editTask(data, () => setTaskDetail(data));
   };
 
   const onDelete = () => {
@@ -56,7 +80,15 @@ const DetailScreen = ({route, navigation}) => {
       </View>
 
       {/* title of task. style font size 24, and bold. */}
-      <Text style={styles.taskTitle}>{taskDetail.task}</Text>
+      {/* <Text style={styles.taskTitle}>{taskDetail.task}</Text> */}
+      <KeyboardAvoidingView>
+        <TextInput
+          value={titleTask}
+          style={styles.taskTitle}
+          onChangeText={onChangeTitleTask}
+          onSubmitEditing={editTitleTask}
+        />
+      </KeyboardAvoidingView>
       {/* View or div or ViewGroup of status task.
        * set flex = 2 to make height 2x bigger than other item of parent flex */}
       <View style={styles.wrapperStatus}>

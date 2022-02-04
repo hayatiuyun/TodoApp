@@ -1,6 +1,8 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable prettier/prettier */
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
-import React, {useState, useCallback, useContext} from 'react';
+import React, {useState, useCallback, useContext, useEffect} from 'react';
 import {Context} from '../context/taskContext';
 
 const useTask = () => {
@@ -39,19 +41,9 @@ const useTask = () => {
     }
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      let isActive = false;
-      setPage(1);
-      if (isFocused) {
-        getTodoList();
-      }
-      return () => {
-        isActive = true;
-      };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isFocused]),
-  );
+  useEffect(() => {
+    getTodoList();
+  }, []);
 
   const addTaskToTaskList = async () => {
     setIsLoading(true);

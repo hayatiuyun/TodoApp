@@ -132,8 +132,19 @@ const deleteTask = dispatch => async (data, doneDelete) => {
     .finally(() => doneDelete());
 };
 
+const editTask = dispatch => async (data, cb) => {
+  await editTodo(data).then(res => {
+    console.log('UPDATING');
+    dispatch({
+      type: 'EDIT-TODO',
+      payload: res.data,
+    });
+    cb();
+  });
+};
+
 export const {Provider, Context} = createDataContext(
   taskReducer,
-  {getTodos, toggleCompletedTask, postTask, loadMore, deleteTask},
+  {getTodos, toggleCompletedTask, postTask, loadMore, deleteTask, editTask},
   initialState,
 );
